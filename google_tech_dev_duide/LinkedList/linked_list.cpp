@@ -66,37 +66,69 @@ class LinkedList{
         }
 
         void addAtIndex(int index, int val){
-            if((!head && !tail) or (index < 0 or index > nodeCount))  return;
+            if((!head && !tail) && index==0){
+                addAtHead(val);return;
+            }
+            if(index < 0 or index > nodeCount)return;
+            if(index == nodeCount){
+                addAtTail(val);
+                return;
+            }
+            if(index == 0){
+                addAtHead(val);
+                return;
+            }
             nodeCount++;
             Node* curr = head;
-            for(int i = 0 ;i < index ; i++) curr = curr->next;
+            if(index < nodeCount/2)     for(int i = 0 ; i < index ; i++) curr = curr->next;
+            else    for(int i= 0 ; i < (nodeCount-index) ; i++) curr = curr->prev;
             Node* temp = new Node;
             temp->data = val;
             curr->next->prev = temp;
             temp->prev = curr;
             temp->next = curr->next;
             curr->next = temp;
-
-            //TODO : Add logic to reverse traverse
         }
 
         void deleteAtIndex(int index){
-            if((!head && !tail) or (index < 0 or index > nodeCount))  return;
+            if((!head && !tail) or (index < 0 or index > nodeCount-1))  return;
             Node* curr = head;
-            for(int i = 0 ;i < index ; i++) curr = curr->next;
-
-            //TODO |: Add logic to remove node
-            //TODO ||: Add logic to reverse traverse
+            for(int i = 1 ;i < index ; i++) curr = curr->next;
+            if(index == 0)  curr = tail;
+            Node* temp = curr->next;
+            Node* next = temp->next;
+            next->prev = curr;
+            curr->next = next;
+            if(index ==0)head = next;
+            if(index == nodeCount-1) tail=curr;
+            delete temp;
+            nodeCount--;
+        }
+        int get(int index) {
+            Node* curr = head;
+            if(index < nodeCount/2)     for(int i = 0 ; i < index ; i++) curr = curr->next;
+            else    for(int i= 0 ; i < (nodeCount-index) ; i++) curr = curr->prev;
+            return curr->data;
         }
 };
 
 int main(){
     LinkedList ll;
+    ll.addAtHead(2);
+    ll.deleteAtIndex(1);
+    ll.addAtHead(2);
+    ll.addAtHead(7);
+    ll.addAtHead(3);
+    ll.addAtHead(2);
+    ll.addAtHead(5);
+    ll.addAtTail(5);
+    ll.get(5);
+    ll.deleteAtIndex(6);
+    cout<<ll.head->data<<endl;
+    cout<<ll.tail->data<<endl;
+    ll.deleteAtIndex(4);
     int counter = 0;
-    ll.addAtTail(1);
-    ll.addAtTail(2);
-    ll.addAtTail(4);
-    ll.addAtIndex(1,3);
+
     cout<<"HEAD<->";
     Node* curr = ll.head;
     while(curr && counter < ll.nodeCount){
@@ -106,3 +138,6 @@ int main(){
     }
     cout<<"END"<<endl;
 }
+
+// "get","addAtHead","addAtIndex","addAtHead"]
+//[4],[4],[5,0],[6]]
