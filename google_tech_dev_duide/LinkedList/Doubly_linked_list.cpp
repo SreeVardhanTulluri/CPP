@@ -1,3 +1,5 @@
+#include<iostream>
+using namespace std;
 struct Node{
     struct Node *prev = nullptr;
     int val = 0;
@@ -59,39 +61,54 @@ public:
             initialize(val);
             return;
         }
-        if(index == 0) addAtHead(val);
-        if(index == nodeCount) addAtTail(val);
+        if(index == 0) {addAtHead(val);return;}
+        if(index == nodeCount+1) {addAtTail(val);return;}
         if(index > nodeCount)   return;
         nodeCount++;
         Node *curr = head;
         for(int i = 1 ;i < index ; i++)  curr = curr->next;
         Node *temp = new Node;
         temp->val = val;
-        temp->next = curr->next;
-        temp->next->prev = temp;
+        if(curr->next){
+            temp->next = curr->next;
+            temp->next->prev = temp;
+
+        }
         temp->prev = curr;
         curr->next = temp;
     }
     
     void deleteAtIndex(int index) {
-        if(!head || index < 0 || index > nodeCount) return;
-        Node *curr = head;
+        if(!head or index <0 or index >nodeCount) return;
+        if(nodeCount == 0) {delete head;nodeCount--;return;}
+        if(index == 0){
+            Node *temp = head;
+            if(head->next){
+                head->next->prev = nullptr;
+                head = head->next;
+                delete temp;
+                nodeCount--;
+                return;
+            }
+        }
         if(index == nodeCount){
+            Node *curr = head;
             while(curr->next->next) curr = curr->next;
             Node *temp = curr->next;
             curr->next = nullptr;
             delete temp;
+            nodeCount--;
+            return;
         }
-        for(int i = 1 ;i < index ; i++)  curr = curr->next;
+        Node *curr = head;
+        for(int i = 1 ; i < index ; i++) curr = curr->next;
         Node *temp = curr->next;
+        temp->next->prev = curr;
         curr->next = temp->next;
-        curr->next->prev = temp->prev;
-        delete temp;
-        nodeCount--;
+        delete temp;      
+        nodeCount--;  
     }
 };
-#include<iostream>
-using namespace std;
 int main(){
     MyLinkedList* obj = new MyLinkedList();
     // obj->addAtHead(1);
@@ -114,9 +131,5 @@ int main(){
         curr = curr->prev;
     }
     cout<<"END"<<endl;
-    cout<<obj->nodeCount<<endl;
-    for(int i=0;i<=obj->nodeCount;i++){
-        cout<<obj->get(i)<<"<->";
-    }
 }
     
