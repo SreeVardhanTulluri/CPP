@@ -23,8 +23,10 @@ public:
     void insert(string word) {
         Node *curr = root;
         for(char c : word){
-            if(curr->children.size() <= 0 || curr->children.count(c) == 0)
+            if(curr->children.size() <= 0 || curr->children.count(c) == 0){
                 curr->children[c] = new Node(c);
+                curr = curr->children[c];
+            }
             else
                 curr = curr->children[c];
         }
@@ -34,7 +36,7 @@ public:
     bool search(string word) {
         Node *curr = root;
         for(char c : word){
-            if(curr->children.size() > 0 && curr->children.count(c) == 0)
+            if(curr->children.size() <= 0 || curr->children.count(c) == 0)
                 return false;
             else
                 curr = curr->children[c];
@@ -45,7 +47,7 @@ public:
     bool startsWith(string prefix) {
         Node *curr = root;
         for(char c : prefix){
-            if(curr->children.size() > 0 && curr->children.count(c) == 0)
+            if(curr->children.size() <= 0 || curr->children.count(c) == 0)
                 return false;
             else
                 curr = curr->children[c];
@@ -64,10 +66,11 @@ public:
 
  int main(){
     Trie *obj = new Trie();
-    obj->insert("apple");
-    obj->search("apple");
-    obj->search("app");
-    obj->startsWith("app");
-    obj->insert("app");
-    obj->search("app");
+    // obj->insert("apple");
+    // cout<<obj->search("apple")<<endl;
+    // cout<<obj->search("app")<<endl;
+    // obj->startsWith("app");
+    // obj->insert("app");
+    // cout<<obj->search("app")<<endl;
+    cout<<obj->search("a")<<endl;
  }
